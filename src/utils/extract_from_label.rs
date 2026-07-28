@@ -5,7 +5,7 @@ pub fn extract_from_label(path: &str, label: &str) -> Result<u64, String> {
         fs::read_to_string(path)
             .map_err(|e| format!("Error reading file {path}: {e}"))?;
 
-    let memory_value = content
+    let label_value = content
         .lines()
         .find_map(|line| {
             if line.starts_with(label) {
@@ -18,5 +18,5 @@ pub fn extract_from_label(path: &str, label: &str) -> Result<u64, String> {
         })
         .ok_or_else(|| format!("Error reading {label}"))?;
 
-    Ok(memory_value)
+    Ok(label_value)
 }
