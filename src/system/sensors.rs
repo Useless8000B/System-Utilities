@@ -1,3 +1,5 @@
+use std::fs;
+
 pub struct Sensor {
 	pub name: String,
 	pub path: String
@@ -20,15 +22,15 @@ impl Sensor {
 		]
 	}
 
-	// pub fn read_sensor(&self) -> Result<u64, String> {
-	// 	let raw_content = match fs::read_to_string(&self.path) {
-	// 		Ok(c) => c,
-	// 		Err(e) => return Err(format!("Error reading {}: {}", self.name, e))
-	// 	};
+	pub fn read_sensor(&self) -> Result<u64, String> {
+		let raw_content = match fs::read_to_string(&self.path) {
+			Ok(c) => c,
+			Err(e) => return Err(format!("Error reading {}: {}", self.name, e))
+		};
 
-	// 	match raw_content.trim().parse::<u64>() {
-	// 		Ok(c) => Ok(c),
-	// 		Err(_) => Err(format!("Invalid value from {}", self.name))
-	// 	}
-	// }
+		match raw_content.trim().parse::<u64>() {
+			Ok(c) => Ok(c),
+			Err(_) => Err(format!("Invalid value from {}", self.name))
+		}
+	}
 }
