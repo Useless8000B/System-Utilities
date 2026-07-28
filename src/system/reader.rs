@@ -18,3 +18,20 @@ pub fn read_ram_info() -> Result<MemoryModel, String> {
         used: (raw_total_ram as f64 - raw_available_ram as f64) / (1024.0 * 1024.0),
     })
 }
+
+pub fn read_zram_info() -> Result<MemoryModel, String> {
+    let sensors = Sensor::memory_sensors();
+
+    let raw_zram = sensors
+        .iter()
+        .find(|v| v.name == "ZRAM")
+        .ok_or("ZRAM sensor not found")?;
+
+    let raw_total_zram = extract_from_label(&raw_zram.path, "SwapTotal")?;
+    let raw_free_zram = extract_from_label(&raw_zram.path, "SwapFree")?;
+
+    Ok(MemoryModel {
+        total: raw_total_zram as f64 / (1024.0 * 1024.0),
+        used: (raw_total_zram - raw_free_zram) as f64 / (1024.0 * 1024.0),
+    })
+}
