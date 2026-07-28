@@ -17,16 +17,24 @@ fn main() {
         let option = get_option();
 
         match Menu::from_input(option) {
+            Some(Menu::ZRAM) => {
+                let zram_info = reader::read_zram_info()
+                    .map_err(|e| format!("Error reading zram sensor: {e}"))
+                    .ok();
+
+                if let Some(model) = &zram_info {
+                    println!("{:.2}/{:.2}", model.used, model.total)
+                }
+            }
             Some(Menu::RAM) => {
                 let ram_info = reader::read_ram_info()
-					.map_err(|e| format!("Error reading memory sensor: {e}"))
-					.ok();
+                    .map_err(|e| format!("Error reading ram sensor: {e}"))
+                    .ok();
 
-				if let Some(model) = &ram_info {
-					println!("{:.2}/{:.2}GB", model.used, model.total)
-				}
+                if let Some(model) = &ram_info {
+                    println!("{:.2}/{:.2}GB", model.used, model.total)
+                }
             }
-            Some(Menu::ZRAM) => (),
             Option::None => println!("Not an option"),
         };
     }
