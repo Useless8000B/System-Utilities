@@ -1,0 +1,33 @@
+use crate::system::reader;
+use crate::utils::format::line;
+use crate::view::menu::Menu;
+use crate::view::ui::get_option;
+use crate::view::ui::show_menu;
+
+mod models;
+mod system;
+mod utils;
+mod view;
+
+fn main() {
+    loop {
+        line("-=", 18);
+        show_menu();
+        line("-=", 18);
+        let option = get_option();
+
+        match Menu::from_input(option) {
+            Some(Menu::RAM) => {
+                let ram_info = reader::read_ram_info()
+					.map_err(|e| format!("Error reading memory sensor: {e}"))
+					.ok();
+
+				if let Some(model) = &ram_info {
+					println!("{:.2}/{:.2}GB", model.used, model.total)
+				}
+            }
+            Some(Menu::ZRAM) => (),
+            Option::None => println!("Not an option"),
+        };
+    }
+}
