@@ -35,3 +35,24 @@ pub fn read_zram_info() -> Result<MemoryModel, String> {
         used: (raw_total_zram - raw_free_zram) as f64 / (1024.0 * 1024.0),
     })
 }
+
+pub fn read_vram_info() -> Result<MemoryModel, String> {
+    let sensors = Sensor::memory_sensors();
+
+    let raw_total_vram = sensors
+        .iter()
+        .find(|v| v.name == "VRAM_TOTAL")
+        .ok_or("VRAM_TOTAL sensor not found")?
+        .read_sensor()?;
+
+    let raw_used_vram = sensors
+        .iter()
+        .find(|v| v.name == "VRAM_USED")
+        .ok_or("VRAM_USED sensor not found")?
+        .read_sensor()?;
+
+    Ok(MemoryModel {
+        total: raw_total_vram as f64 / (1024.0 * 1024.0),
+        used: raw_used_vram as f64 / (1024.0 * 1024.0),
+    })
+}
