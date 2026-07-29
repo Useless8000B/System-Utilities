@@ -19,22 +19,34 @@ fn main() {
         match Menu::from_input(option) {
             Some(Menu::ZRAM) => {
                 let zram_info = reader::read_zram_info()
-                    .map_err(|e| format!("Error reading zram sensor: {e}"))
+                    .map_err(|e| format!("Error reading ZRAM sensor: {e}"))
                     .ok();
 
                 if let Some(model) = &zram_info {
                     println!("{:.2}/{:.2}", model.used, model.total)
                 }
             }
+
             Some(Menu::RAM) => {
                 let ram_info = reader::read_ram_info()
-                    .map_err(|e| format!("Error reading ram sensor: {e}"))
+                    .map_err(|e| format!("Error reading RAM sensor: {e}"))
                     .ok();
 
                 if let Some(model) = &ram_info {
                     println!("{:.2}/{:.2}GB", model.used, model.total)
                 }
             }
+
+            Some(Menu::VRAM) => {
+                let vram_info = reader::read_vram_info()
+                    .map_err(|e| format!("Error reading VRAM sensor: {}", e))
+                    .ok();
+
+                if let Some(model) = &vram_info {
+                    println!("{:.2}/{:.2}GB", model.used, model.total)
+                }
+            }
+
             Option::None => println!("Not an option"),
         };
     }
