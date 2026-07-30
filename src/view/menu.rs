@@ -2,6 +2,7 @@ pub enum Menu {
 	ZRAM,
 	RAM,
 	VRAM,
+	CPU
 }
 
 impl Menu {
@@ -9,7 +10,8 @@ impl Menu {
 		match self {
 			Menu::ZRAM => "[1] Check ZRAM usage",
 			Menu::RAM => "[2] Check RAM usage",
-			Menu::VRAM => "[3] Check VRAM usage"
+			Menu::VRAM => "[3] Check VRAM usage",
+			Menu::CPU => "[4] Check CPU stats"
 		}
 	}
 
@@ -18,11 +20,12 @@ impl Menu {
 			1 => Some(Menu::ZRAM),
 			2 => Some(Menu::RAM),
 			3 => Some(Menu::VRAM),
+			4 => Some(Menu::CPU),
 			_ => None			
 		}
 	}
 
-	pub fn all() -> [Menu; 3] {
-		[Menu::ZRAM, Menu::RAM, Menu::VRAM]
+	pub fn all() -> [Menu; 4] {
+		[Menu::ZRAM, Menu::RAM, Menu::VRAM, Menu::CPU]
 	}
 }
