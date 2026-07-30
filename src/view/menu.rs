@@ -3,7 +3,7 @@ pub enum Menu {
     Ram,
     Vram,
     Cpu,
-    VideoCard,
+    Gpu,
 }
 
 impl Menu {
@@ -13,7 +13,7 @@ impl Menu {
             Menu::Ram => "[2] Check RAM usage",
             Menu::Vram => "[3] Check VRAM usage",
             Menu::Cpu => "[4] Check CPU stats",
-            Menu::VideoCard => "[5] Check VIDEO CARD stats",
+            Menu::Gpu => "[5] Check GPU stats",
         }
     }
 
@@ -23,7 +23,7 @@ impl Menu {
             2 => Some(Menu::Ram),
             3 => Some(Menu::Vram),
             4 => Some(Menu::Cpu),
-            5 => Some(Menu::VideoCard),
+            5 => Some(Menu::Gpu),
             _ => None,
         }
     }
@@ -34,7 +34,7 @@ impl Menu {
             Menu::Ram,
             Menu::Vram,
             Menu::Cpu,
-            Menu::VideoCard,
+            Menu::Gpu,
         ]
     }
 }
