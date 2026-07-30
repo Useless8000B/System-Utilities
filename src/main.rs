@@ -57,7 +57,15 @@ fn main() {
                 }
             }
 
-            Some(Menu::VideoCard) => {}
+            Some(Menu::Gpu) => {
+                let gpu_info = reader::read_gpu_info()
+                    .map_err(|e| format!("Error reading GPU sensor: {e}"))
+                    .ok();
+
+                if let Some(model) = &gpu_info {
+                    println!("{}°C\nUsage: {}", model.temperature, model.usage)
+                }
+            }
 
             Option::None => println!("Not an option"),
         };
