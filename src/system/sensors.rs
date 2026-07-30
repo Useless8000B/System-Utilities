@@ -22,6 +22,12 @@ impl Sensor {
 		]
 	}
 
+	pub fn cpu_sensors() -> Vec<Sensor> {
+		vec![
+			Sensor::new("INTEL_AVERAGE_TEMPERATURE", "/sys/class/hwmon/hwmon2/temp1_input"),
+		]
+	}
+
 	pub fn read_sensor(&self) -> Result<u64, String> {
 		let raw_content = match fs::read_to_string(&self.path) {
 			Ok(c) => c,
