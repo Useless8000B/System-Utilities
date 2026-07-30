@@ -1,5 +1,6 @@
 use crate::models::cpu_model::CpuModel;
 use crate::models::memory_model::MemoryModel;
+use crate::models::gpu_model::GpuModel;
 use crate::system::sensors::Sensor;
 use crate::utils::extract_from_label::extract_from_label;
 
@@ -69,5 +70,26 @@ pub fn read_cpu_info() -> Result<CpuModel, String> {
 
     Ok(CpuModel {
         average_temperature: raw_intel_average_temperature as f32 / 1000.0,
+    })
+}
+
+pub fn read_gpu_info() -> Result<GpuModel, String> {
+    let sensors = Sensor::gpu_sensors();
+
+    let raw_amd_gpu_temperature = sensors
+        .iter()
+        .find(|v| v.name == "AMD_GPU_TEMPERATURE")
+        .ok_or("AMD_GPU_TEMPERATURE sensor not found!")?
+        .read_sensor()?;
+
+    let raw_amd_gpu_usage = sensors
+        .iter()
+        .find(|v| v.name == "AMD_GPU_USAGE")
+        .ok_or("AMD_GPU_USAGE sensor not found!")?
+        .read_sensor()?;
+
+    Ok(GpuModel {
+        temperature: raw_amd_gpu_temperature as f32 / 1000.0,
+        usage: raw_amd_gpu_usage as u8,
     })
 }
