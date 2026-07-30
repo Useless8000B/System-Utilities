@@ -17,7 +17,7 @@ fn main() {
         let option = get_option();
 
         match Menu::from_input(option) {
-            Some(Menu::ZRAM) => {
+            Some(Menu::Zram) => {
                 let zram_info = reader::read_zram_info()
                     .map_err(|e| format!("Error reading ZRAM sensor: {e}"))
                     .ok();
@@ -27,7 +27,7 @@ fn main() {
                 }
             }
 
-            Some(Menu::RAM) => {
+            Some(Menu::Ram) => {
                 let ram_info = reader::read_ram_info()
                     .map_err(|e| format!("Error reading RAM sensor: {e}"))
                     .ok();
@@ -37,7 +37,7 @@ fn main() {
                 }
             }
 
-            Some(Menu::VRAM) => {
+            Some(Menu::Vram) => {
                 let vram_info = reader::read_vram_info()
                     .map_err(|e| format!("Error reading VRAM sensor: {e}"))
                     .ok();
@@ -47,7 +47,7 @@ fn main() {
                 }
             }
 
-            Some(Menu::CPU) => {
+            Some(Menu::Cpu) => {
                 let cpu_info = reader::read_cpu_info()
                     .map_err(|e| format!("Error reading CPU sensor: {e}"))
                     .ok();
@@ -56,6 +56,8 @@ fn main() {
                     println!("{:.2}°C", model.average_temperature)
                 }
             }
+
+            Some(Menu::VideoCard) => {}
 
             Option::None => println!("Not an option"),
         };
