@@ -39,11 +39,21 @@ fn main() {
 
             Some(Menu::VRAM) => {
                 let vram_info = reader::read_vram_info()
-                    .map_err(|e| format!("Error reading VRAM sensor: {}", e))
+                    .map_err(|e| format!("Error reading VRAM sensor: {e}"))
                     .ok();
 
                 if let Some(model) = &vram_info {
                     println!("{:.2}/{:.2}GB", model.used, model.total)
+                }
+            }
+
+            Some(Menu::CPU) => {
+                let cpu_info = reader::read_cpu_info()
+                    .map_err(|e| format!("Error reading CPU sensor: {e}"))
+                    .ok();
+
+                if let Some(model) = &cpu_info {
+                    println!("{:.2}°C", model.average_temperature)
                 }
             }
 
