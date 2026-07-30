@@ -63,7 +63,7 @@ fn main() {
                     .ok();
 
                 if let Some(model) = &gpu_info {
-                    println!("{}°C\nUsage: {}", model.temperature, model.usage)
+                    println!("{}°C\nUsage: {}%", model.temperature, model.usage)
                 }
             }
 
