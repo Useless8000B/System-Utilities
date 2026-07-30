@@ -28,6 +28,13 @@ impl Sensor {
 		]
 	}
 
+	pub fn gpu_sensors() -> Vec<Sensor> {
+		vec![
+			Sensor::new("AMD_GPU_TEMPERATURE", "/sys/class/hwmon/hwmon1/temp1_input"),
+			Sensor::new("AMD_GPU_USAGE", "/sys/class/drm/card1/device/gpu_busy_percent")
+		]
+	}
+
 	pub fn read_sensor(&self) -> Result<u64, String> {
 		let raw_content = match fs::read_to_string(&self.path) {
 			Ok(c) => c,
