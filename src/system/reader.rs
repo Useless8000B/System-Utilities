@@ -1,6 +1,5 @@
-use crate::models::cpu_model::CpuModel;
 use crate::models::memory_model::MemoryModel;
-use crate::models::gpu_model::GpuModel;
+use crate::models::pu_model::PuModel;
 use crate::system::sensors::Sensor;
 use crate::utils::extract_from_label::extract_from_label;
 
@@ -59,7 +58,7 @@ pub fn read_vram_info() -> Result<MemoryModel, String> {
     })
 }
 
-pub fn read_cpu_info() -> Result<CpuModel, String> {
+pub fn read_cpu_info() -> Result<PuModel, String> {
     let sensors = Sensor::cpu_sensors();
 
     let raw_intel_average_temperature = sensors
@@ -68,12 +67,13 @@ pub fn read_cpu_info() -> Result<CpuModel, String> {
         .ok_or("INTEL_AVERAGE_TEMPERATURE sensor not found!")?
         .read_sensor()?;
 
-    Ok(CpuModel {
-        average_temperature: raw_intel_average_temperature as f32 / 1000.0,
+    Ok(PuModel {
+        temperature: raw_intel_average_temperature as f32 / 1000.0,
+        usage: 0
     })
 }
 
-pub fn read_gpu_info() -> Result<GpuModel, String> {
+pub fn read_gpu_info() -> Result<PuModel, String> {
     let sensors = Sensor::gpu_sensors();
 
     let raw_amd_gpu_temperature = sensors
@@ -88,7 +88,7 @@ pub fn read_gpu_info() -> Result<GpuModel, String> {
         .ok_or("AMD_GPU_USAGE sensor not found!")?
         .read_sensor()?;
 
-    Ok(GpuModel {
+    Ok(PuModel {
         temperature: raw_amd_gpu_temperature as f32 / 1000.0,
         usage: raw_amd_gpu_usage as u8,
     })
