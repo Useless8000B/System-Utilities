@@ -15,8 +15,11 @@ fn main() {
         show_menu();
         line("-=", 18);
         let option = get_option();
+        line("-=", 18);
 
         match Menu::from_input(option) {
+            Some(Menu::Exit) => break,
+
             Some(Menu::Zram) => {
                 let zram_info = reader::read_zram_info()
                     .map_err(|e| format!("Error reading ZRAM sensor: {e}"))

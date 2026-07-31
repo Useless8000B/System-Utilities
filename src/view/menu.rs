@@ -1,4 +1,5 @@
 pub enum Menu {
+    Exit,
     Zram,
     Ram,
     Vram,
@@ -9,6 +10,7 @@ pub enum Menu {
 impl Menu {
     pub fn as_string(&self) -> &str {
         match self {
+            Menu::Exit => "[0] Exit",
             Menu::Zram => "[1] Check ZRAM usage",
             Menu::Ram => "[2] Check RAM usage",
             Menu::Vram => "[3] Check VRAM usage",
@@ -19,6 +21,7 @@ impl Menu {
 
     pub fn from_input(choice: u8) -> Option<Self> {
         match choice {
+            0 => Some(Menu::Exit),
             1 => Some(Menu::Zram),
             2 => Some(Menu::Ram),
             3 => Some(Menu::Vram),
@@ -28,7 +31,7 @@ impl Menu {
         }
     }
 
-    pub fn all() -> [Menu; 5] {
-        [Menu::Zram, Menu::Ram, Menu::Vram, Menu::Cpu, Menu::Gpu]
+    pub fn all() -> [Menu; 6] {
+        [Menu::Exit, Menu::Zram, Menu::Ram, Menu::Vram, Menu::Cpu, Menu::Gpu]
     }
 }
