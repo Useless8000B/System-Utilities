@@ -1,3 +1,8 @@
+use std::thread;
+use std::time::Duration;
+
+use sysinfo::System;
+
 use crate::models::memory_model::MemoryModel;
 use crate::models::pu_model::PuModel;
 use crate::system::sensors::Sensor;
@@ -60,7 +65,13 @@ pub fn read_vram_info() -> Result<MemoryModel, String> {
 
 pub fn read_cpu_info() -> Result<PuModel, String> {
     let sensors = Sensor::cpu_sensors();
+    let mut sys = System::new_all();
 
+    sys.refresh_cpu_usage();
+    thread::sleep(Duration::from_millis(200));
+    sys.refresh_cpu_usage();
+    
+    let cpu_usage: u8 = sys.global_cpu_usage() as u8;
     let raw_intel_average_temperature = sensors
         .iter()
         .find(|v| v.name == "INTEL_AVERAGE_TEMPERATURE")
@@ -69,7 +80,7 @@ pub fn read_cpu_info() -> Result<PuModel, String> {
 
     Ok(PuModel {
         temperature: raw_intel_average_temperature as f32 / 1000.0,
-        usage: 0
+        usage: cpu_usage
     })
 }
 
