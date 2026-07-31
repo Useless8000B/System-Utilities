@@ -29,12 +29,6 @@ impl Menu {
     }
 
     pub fn all() -> [Menu; 5] {
-        [
-            Menu::Zram,
-            Menu::Ram,
-            Menu::Vram,
-            Menu::Cpu,
-            Menu::Gpu,
-        ]
+        [Menu::Zram, Menu::Ram, Menu::Vram, Menu::Cpu, Menu::Gpu]
     }
 }
