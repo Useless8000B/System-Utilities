@@ -5,6 +5,7 @@ pub enum Menu {
     Vram,
     Cpu,
     Gpu,
+    Storage,
 }
 
 impl Menu {
@@ -16,6 +17,7 @@ impl Menu {
             Menu::Vram => "[3] Check VRAM usage",
             Menu::Cpu => "[4] Check CPU stats",
             Menu::Gpu => "[5] Check GPU stats",
+            Menu::Storage => "[6] Check STORAGE stats",
         }
     }
 
@@ -27,11 +29,20 @@ impl Menu {
             3 => Some(Menu::Vram),
             4 => Some(Menu::Cpu),
             5 => Some(Menu::Gpu),
+            6 => Some(Menu::Storage),
             _ => None,
         }
     }
 
-    pub fn all() -> [Menu; 6] {
-        [Menu::Exit, Menu::Zram, Menu::Ram, Menu::Vram, Menu::Cpu, Menu::Gpu]
+    pub fn all() -> [Menu; 7] {
+        [
+            Menu::Exit,
+            Menu::Zram,
+            Menu::Ram,
+            Menu::Vram,
+            Menu::Cpu,
+            Menu::Gpu,
+            Menu::Storage
+        ]
     }
 }
