@@ -35,6 +35,13 @@ impl Sensor {
 		]
 	}
 
+	pub fn storage_sensors() -> Vec<Sensor> {
+		vec![
+			Sensor::new("NVME_TEMPERATURE", "/sys/class/hwmon/hwmon0/temp1_input"),
+			Sensor::new("NVME_SIZE", "/sys/block/nvme0n1/size")
+		]
+	}
+
 	pub fn read_sensor(&self) -> Result<u64, String> {
 		let raw_content = match fs::read_to_string(&self.path) {
 			Ok(c) => c,
