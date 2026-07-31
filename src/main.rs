@@ -80,7 +80,7 @@ fn main() {
 
                 if let Some(model) = &storage_info {
                     println!(
-                        "Temperature: {:.2}°C\nUsage: {:.2}/{:.2}",
+                        "Temperature: {:.2}°C\nUsage: {:.2}/{:.2} GiB",
                         model.temperature, model.used, model.total
                     )
                 }
