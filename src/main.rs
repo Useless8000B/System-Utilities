@@ -26,7 +26,7 @@ fn main() {
                     .ok();
 
                 if let Some(model) = &zram_info {
-                    println!("{:.2}/{:.2}", model.used, model.total)
+                    println!("{:.2}/{:.2}GiB", model.used, model.total)
                 }
             }
 
@@ -36,7 +36,7 @@ fn main() {
                     .ok();
 
                 if let Some(model) = &ram_info {
-                    println!("{:.2}/{:.2}GB", model.used, model.total)
+                    println!("Usage: {:.2}/{:.2} GiB", model.used, model.total)
                 }
             }
 
@@ -46,7 +46,7 @@ fn main() {
                     .ok();
 
                 if let Some(model) = &vram_info {
-                    println!("{:.2}/{:.2}GB", model.used, model.total)
+                    println!("Usage: {:.2}/{:.2} GiB", model.used, model.total)
                 }
             }
 
@@ -56,7 +56,10 @@ fn main() {
                     .ok();
 
                 if let Some(model) = &cpu_info {
-                    println!("{:.2}°C\nUsage: {}%", model.temperature, model.usage)
+                    println!(
+                        "Temperature: {:.2}°C\nUsage: {}%",
+                        model.temperature, model.usage
+                    )
                 }
             }
 
@@ -67,6 +70,19 @@ fn main() {
 
                 if let Some(model) = &gpu_info {
                     println!("{:.2}°C\nUsage: {}%", model.temperature, model.usage)
+                }
+            }
+
+            Some(Menu::Storage) => {
+                let storage_info = reader::read_storage_info()
+                    .map_err(|e| format!("Error reading STORAGE sensor: {e}"))
+                    .ok();
+
+                if let Some(model) = &storage_info {
+                    println!(
+                        "Temperature: {:.2}°C\nUsage: {:.2}/{:.2}",
+                        model.temperature, model.used, model.total
+                    )
                 }
             }
 
