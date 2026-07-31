@@ -56,7 +56,7 @@ fn main() {
                     .ok();
 
                 if let Some(model) = &cpu_info {
-                    println!("{:.2}°C", model.temperature)
+                    println!("{:.2}°C\nUsage: {}%", model.temperature, model.usage)
                 }
             }
 
