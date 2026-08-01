@@ -11,9 +11,11 @@ pub fn show_menu() {
 pub fn get_option() -> u8 {
     let mut option = String::new();
 
-	io::stdin().read_line(&mut option).expect("Error reading option");
+    io::stdin()
+        .read_line(&mut option)
+        .expect("Error reading option");
 
-	let option = option.trim().parse().expect("Not a number!");
+    let option = option.trim().parse().expect("Not a number!");
 
-	option
+    option
 }
