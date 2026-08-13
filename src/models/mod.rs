@@ -1,3 +1,3 @@
-pub mod memory_model;
-pub mod pu_model;
-pub mod storage_model;
+pub mod memory;
+pub mod pu;
+pub mod storage;
