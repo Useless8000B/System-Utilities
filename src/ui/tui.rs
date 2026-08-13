@@ -1,6 +1,6 @@
 use std::io;
 
-use crate::view::menu::Menu;
+use crate::ui::menu::Menu;
 
 pub fn show_menu() {
     for option in Menu::all() {

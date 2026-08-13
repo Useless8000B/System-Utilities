@@ -1,2 +1,2 @@
 pub mod menu;
-pub mod ui;
+pub mod tui;
