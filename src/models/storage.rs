@@ -1,4 +1,4 @@
-pub struct StorageModel {
+pub struct Storage {
 	pub temperature: f32,
 	pub used: f64,
 	pub total: f64
