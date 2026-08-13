@@ -1,13 +1,13 @@
 use crate::system::reader;
+use crate::ui::menu::Menu;
+use crate::ui::tui::get_option;
+use crate::ui::tui::show_menu;
 use crate::utils::format::line;
-use crate::view::menu::Menu;
-use crate::view::ui::get_option;
-use crate::view::ui::show_menu;
 
 mod models;
 mod system;
+mod ui;
 mod utils;
-mod view;
 
 fn main() {
     loop {
@@ -20,33 +20,18 @@ fn main() {
         match Menu::from_input(option) {
             Some(Menu::Exit) => break,
 
-            Some(Menu::Zram) => {
-                let zram_info = reader::read_zram_info()
-                    .map_err(|e| format!("Error reading ZRAM sensor: {e}"))
-                    .ok();
+            Some(Menu::Memory) => {
+                let sources = [
+                    ("RAM", reader::read_ram_info().ok()),
+                    ("ZRAM", reader::read_zram_info().ok()),
+                    ("VRAM", reader::read_vram_info().ok()),
+                ];
 
-                if let Some(model) = &zram_info {
-                    println!("{:.2}/{:.2}GiB", model.used, model.total)
-                }
-            }
-
-            Some(Menu::Ram) => {
-                let ram_info = reader::read_ram_info()
-                    .map_err(|e| format!("Error reading RAM sensor: {e}"))
-                    .ok();
-
-                if let Some(model) = &ram_info {
-                    println!("Usage: {:.2}/{:.2} GiB", model.used, model.total)
-                }
-            }
-
-            Some(Menu::Vram) => {
-                let vram_info = reader::read_vram_info()
-                    .map_err(|e| format!("Error reading VRAM sensor: {e}"))
-                    .ok();
-
-                if let Some(model) = &vram_info {
-                    println!("Usage: {:.2}/{:.2} GiB", model.used, model.total)
+                for (label, value) in sources {
+                    match value {
+                        Some(mem) => println!("{}: {:.2}/{:.2} GiB", label, mem.used, mem.total),
+                        None => println!("Unknown error displaying info"),
+                    }
                 }
             }
 
@@ -55,11 +40,9 @@ fn main() {
                     .map_err(|e| format!("Error reading CPU sensor: {e}"))
                     .ok();
 
-                if let Some(model) = &cpu_info {
-                    println!(
-                        "Temperature: {:.2}°C\nUsage: {}%",
-                        model.temperature, model.usage
-                    )
+                match cpu_info {
+                    Some(cpu) => println!("Temperature: {}\nUsage: {}%", cpu.temperature, cpu.usage),
+                    None => println!("Unknown error displaying info"),
                 }
             }
 
@@ -71,6 +54,11 @@ fn main() {
                 if let Some(model) = &gpu_info {
                     println!("{:.2}°C\nUsage: {}%", model.temperature, model.usage)
                 }
+
+                match gpu_info {
+                    Some(gpu) => println!("Temperature: {}\nUsage: {}%", gpu.temperature, gpu.usage),
+                    None => println!("Unknown error displaying info"),
+                }
             }
 
             Some(Menu::Storage) => {
@@ -78,15 +66,16 @@ fn main() {
                     .map_err(|e| format!("Error reading STORAGE sensor: {e}"))
                     .ok();
 
-                if let Some(model) = &storage_info {
-                    println!(
-                        "Temperature: {:.2}°C\nUsage: {:.2}/{:.2} GiB",
-                        model.temperature, model.used, model.total
-                    )
+                match storage_info {
+                    Some(storage) => println!(
+                        "Temperature: {}\nUsage: {:.2}/{:.2} GiB",
+                        storage.temperature, storage.used, storage.total
+                    ),
+                    None => println!("Unknown error displaying info"),
                 }
             }
 
-            Option::None => println!("Not an option"),
+            None => println!("Not an option"),
         };
     }
 }
