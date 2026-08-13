@@ -1,2 +1,2 @@
-pub mod sensors;
+mod sensors;
 pub mod reader;
