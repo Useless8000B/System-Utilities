@@ -1,56 +1,78 @@
 use std::fs;
 
 pub struct Sensor {
-	pub name: String,
-	pub path: String
+    pub name: &'static str,
+    pub path: &'static str,
 }
 
 impl Sensor {
-	pub fn new(name: &str, path: &str) -> Self {
-		Sensor {
-			name: name.to_string(),
-			path: path.to_string()
-		}
-	}
+    pub const fn new(name: &'static str, path: &'static str) -> Self {
+        Sensor { name, path }
+    }
 
-	pub fn memory_sensors() -> Vec<Sensor> {
-		vec![
-			Sensor::new("RAM", "/proc/meminfo"),
-			Sensor::new("ZRAM", "/proc/meminfo"),
-			Sensor::new("VRAM_TOTAL", "/sys/class/drm/card1/device/mem_info_vram_total"),
-			Sensor::new("VRAM_USED", "/sys/class/drm/card1/device/mem_info_vram_used")
-		]
-	}
+    pub fn memory_sensors() -> &'static [Sensor] {
+        const MEMORY_SENSORS: &[Sensor] = &[
+            Sensor::new("RAM", "/proc/meminfo"),
+            Sensor::new("ZRAM", "/proc/meminfo"),
+            Sensor::new(
+                "VRAM_TOTAL",
+                "/sys/class/drm/card1/device/mem_info_vram_total",
+            ),
+            Sensor::new(
+                "VRAM_USED",
+                "/sys/class/drm/card1/device/mem_info_vram_used",
+            ),
+        ];
 
-	pub fn cpu_sensors() -> Vec<Sensor> {
-		vec![
-			Sensor::new("INTEL_AVERAGE_TEMPERATURE", "/sys/class/hwmon/hwmon2/temp1_input"),
-		]
-	}
+        MEMORY_SENSORS
+    }
 
-	pub fn gpu_sensors() -> Vec<Sensor> {
-		vec![
-			Sensor::new("AMD_GPU_TEMPERATURE", "/sys/class/hwmon/hwmon1/temp1_input"),
-			Sensor::new("AMD_GPU_USAGE", "/sys/class/drm/card1/device/gpu_busy_percent")
-		]
-	}
+    pub fn cpu_sensors() -> &'static [Sensor] {
+        const CPU_SENSORS: &[Sensor] = &[Sensor::new(
+            "INTEL_AVERAGE_TEMPERATURE",
+            "/sys/class/hwmon/hwmon2/temp1_input",
+        )];
 
-	pub fn storage_sensors() -> Vec<Sensor> {
-		vec![
-			Sensor::new("NVME_TEMPERATURE", "/sys/class/hwmon/hwmon0/temp1_input"),
-			Sensor::new("NVME_SIZE", "/sys/block/nvme0n1/size")
-		]
-	}
+        CPU_SENSORS
+    }
 
-	pub fn read_sensor(&self) -> Result<u64, String> {
-		let raw_content = match fs::read_to_string(&self.path) {
-			Ok(c) => c,
-			Err(e) => return Err(format!("Error reading {}: {}", self.name, e))
-		};
+    pub fn gpu_sensors() -> &'static [Sensor] {
+        const GPU_SENSORS: &[Sensor] = &[
+            Sensor::new("AMD_GPU_TEMPERATURE", "/sys/class/hwmon/hwmon1/temp1_input"),
+            Sensor::new(
+                "AMD_GPU_USAGE",
+                "/sys/class/drm/card1/device/gpu_busy_percent",
+            ),
+        ];
 
-		match raw_content.trim().parse::<u64>() {
-			Ok(c) => Ok(c),
-			Err(_) => Err(format!("Invalid value from {}", self.name))
-		}
-	}
+        GPU_SENSORS
+    }
+
+    pub fn storage_sensors() -> &'static [Sensor] {
+        const STORAGE_SENSORS: &[Sensor] = &[
+            Sensor::new("NVME_TEMPERATURE", "/sys/class/hwmon/hwmon0/temp1_input"),
+            Sensor::new("NVME_SIZE", "/sys/block/nvme0n1/size"),
+        ];
+
+        STORAGE_SENSORS
+    }
+
+    pub fn read_sensor(&self) -> Result<u64, String> {
+        let raw_content = match fs::read_to_string(self.path) {
+            Ok(c) => c,
+            Err(e) => return Err(format!("Error reading {}: {}", self.name, e)),
+        };
+
+        match raw_content.trim().parse::<u64>() {
+            Ok(c) => Ok(c),
+            Err(_) => Err(format!("Invalid value from {}", self.name)),
+        }
+    }
+
+    pub fn find_sensor<'a>(sensors: &'a [Sensor], name: &str) -> Result<&'a Sensor, String> {
+        sensors
+            .iter()
+            .find(|v| v.name == name)
+            .ok_or_else(|| format!("{name} sensor not found"))
+    }
 }
