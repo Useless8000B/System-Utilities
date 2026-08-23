@@ -1,4 +1,4 @@
 pub struct Pu {
-	pub temperature: f32,
+	pub temperature: f64,
 	pub usage: u8
 }
