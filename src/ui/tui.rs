@@ -9,13 +9,20 @@ pub fn show_menu() {
 }
 
 pub fn get_option() -> u8 {
-    let mut option = String::new();
+    loop {
+        let mut option = String::new();
 
-    io::stdin()
-        .read_line(&mut option)
-        .expect("Error reading option");
+        io::stdin()
+            .read_line(&mut option)
+            .expect("Error reading option");
 
-    let option = option.trim().parse().expect("Not a number!");
+        match option.trim().parse::<u8>() {
+            Ok(number) => return number,
 
-    option
+            Err(e) => {
+                println!("Error parsing value: {e}");
+                continue;
+            }
+        };
+    }
 }
