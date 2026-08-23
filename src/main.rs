@@ -51,12 +51,8 @@ fn main() {
                     .map_err(|e| format!("Error reading GPU sensor: {e}"))
                     .ok();
 
-                if let Some(model) = &gpu_info {
-                    println!("{:.2}°C\nUsage: {}%", model.temperature, model.usage)
-                }
-
                 match gpu_info {
-                    Some(gpu) => println!("Temperature: {}\nUsage: {}%", gpu.temperature, gpu.usage),
+                    Some(gpu) => println!("Temperature: {}°C\nUsage: {}%", gpu.temperature, gpu.usage),
                     None => println!("Unknown error displaying info"),
                 }
             }
@@ -68,7 +64,7 @@ fn main() {
 
                 match storage_info {
                     Some(storage) => println!(
-                        "Temperature: {}\nUsage: {:.2}/{:.2} GiB",
+                        "Temperature: {}°C\nUsage: {:.2}/{:.2} GiB",
                         storage.temperature, storage.used, storage.total
                     ),
                     None => println!("Unknown error displaying info"),
