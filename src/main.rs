@@ -8,6 +8,7 @@ mod models;
 mod system;
 mod ui;
 mod utils;
+mod errors;
 
 fn main() {
     loop {
