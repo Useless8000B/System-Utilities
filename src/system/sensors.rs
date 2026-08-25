@@ -1,4 +1,5 @@
 use std::fs;
+use crate::errors::reader_error::ReaderError;
 
 pub struct Sensor {
     pub name: &'static str,
@@ -57,22 +58,22 @@ impl Sensor {
         STORAGE_SENSORS
     }
 
-    pub fn read_sensor(&self) -> Result<u64, String> {
+    pub fn read_sensor(&self) -> Result<u64, ReaderError> {
         let raw_content = match fs::read_to_string(self.path) {
             Ok(c) => c,
-            Err(e) => return Err(format!("Error reading {}: {}", self.name, e)),
+            Err(e) => return Err(ReaderError::ReadingError(format!("Error reading {}: {e}", self.path))),
         };
 
         match raw_content.trim().parse::<u64>() {
             Ok(c) => Ok(c),
-            Err(_) => Err(format!("Invalid value from {}", self.name)),
+            Err(e) => Err(ReaderError::ParseError(format!("Coudln't parse: {raw_content}: {e}"))),
         }
     }
 
-    pub fn find_sensor<'a>(sensors: &'a [Sensor], name: &str) -> Result<&'a Sensor, String> {
+    pub fn find_sensor<'a>(sensors: &'a [Sensor], name: &str) -> Result<&'a Sensor, ReaderError> {
         sensors
             .iter()
             .find(|v| v.name == name)
-            .ok_or_else(|| format!("{name} sensor not found"))
+            .ok_or_else(|| ReaderError::SensorNotFound(format!("{name} sensor not found")))
     }
 }
