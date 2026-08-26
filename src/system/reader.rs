@@ -93,7 +93,7 @@ pub fn read_storage_info() -> Result<Storage, ReaderError> {
 
     Ok(Storage {
         temperature: raw_storage_temperature as f64 / MILLIDEGREES_C_TO_CELSIUS,
-        used: disk.available_space() as f64 / (1024.0 * 1024.0 * 1024.0),
+        used: (raw_storage_size * 512 - disk.available_space()) as f64 / (1024.0 * 1024.0 * 1024.0),
         total: (raw_storage_size * 512) as f64 / (1024.0 * 1024.0 * 1024.0),
     })
 }
