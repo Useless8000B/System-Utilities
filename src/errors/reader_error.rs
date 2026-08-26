@@ -2,6 +2,7 @@ pub enum ReaderError {
     SensorNotFound(String),
     ParseError(String),
     ReadingError(String),
+    NotSupported
 }
 
 impl std::fmt::Display for ReaderError {
@@ -10,6 +11,7 @@ impl std::fmt::Display for ReaderError {
             ReaderError::SensorNotFound(b) => write!(f, "{b} sensor not found!"),
             ReaderError::ParseError(b) => write!(f, "Couldn't parse {b}"),
             ReaderError::ReadingError(b) => write!(f, "Error reading {b}"),
+            ReaderError::NotSupported => write!(f, "Not supported")
         }
     }
 }
