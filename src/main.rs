@@ -1,3 +1,4 @@
+use crate::errors::reader_error::ReaderError;
 use crate::system::reader;
 use crate::ui::menu::Menu;
 use crate::ui::tui::get_option;
@@ -23,52 +24,47 @@ fn main() {
 
             Some(Menu::Memory) => {
                 let sources = [
-                    ("RAM", reader::read_ram_info().ok()),
-                    ("ZRAM", reader::read_zram_info().ok()),
-                    ("VRAM", reader::read_vram_info().ok()),
+                    ("RAM", reader::read_ram_info().map_err(|_| ReaderError::NotSupported)),
+                    ("ZRAM", reader::read_zram_info().map_err(|_| ReaderError::NotSupported)),
+                    ("VRAM", reader::read_vram_info().map_err(|_| ReaderError::NotSupported)),
                 ];
 
                 for (label, value) in sources {
                     match value {
-                        Some(mem) => println!("{}: {:.2}/{:.2} GiB", label, mem.used, mem.total),
-                        None => println!("Unknown error displaying info"),
+                        Ok(mem) => println!("{}: {:.2}/{:.2} GiB", label, mem.used, mem.total),
+                        Err(e) => println!("{e}")
                     }
                 }
             }
 
             Some(Menu::Cpu) => {
-                let cpu_info = reader::read_cpu_info()
-                    .map_err(|e| format!("Error reading CPU sensor: {e}"))
-                    .ok();
+                let cpu_info = reader::read_cpu_info().map_err(|_| ReaderError::NotSupported);
 
                 match cpu_info {
-                    Some(cpu) => println!("Temperature: {}\nUsage: {}%", cpu.temperature, cpu.usage),
-                    None => println!("Unknown error displaying info"),
+                    Ok(cpu) => println!("Temperature: {}°C\nUsage: {}%", cpu.temperature, cpu.usage),
+                    Err(e) => println!("{e}")
                 }
             }
 
             Some(Menu::Gpu) => {
                 let gpu_info = reader::read_gpu_info()
-                    .map_err(|e| format!("Error reading GPU sensor: {e}"))
-                    .ok();
+                    .map_err(|_| ReaderError::NotSupported);
 
                 match gpu_info {
-                    Some(gpu) => println!("Temperature: {}°C\nUsage: {}%", gpu.temperature, gpu.usage),
-                    None => println!("Unknown error displaying info"),
+                    Ok(gpu) => println!("Temperature: {}°C\nUsage: {}%", gpu.temperature, gpu.usage),
+                    Err(e) => println!("{e}"),
                 }
             }
 
             Some(Menu::Storage) => {
                 let storage_info = reader::read_storage_info()
-                    .map_err(|e| format!("Error reading STORAGE sensor: {e}"))
-                    .ok();
-
+                    .map_err(|_| ReaderError::NotSupported);
                 match storage_info {
-                    Some(storage) => println!(
+                    Ok(storage) => println!(
                         "Temperature: {}°C\nUsage: {:.2}/{:.2} GiB",
                         storage.temperature, storage.used, storage.total
                     ),
-                    None => println!("Unknown error displaying info"),
+                    Err(e) => println!("{e}"),
                 }
             }
 
