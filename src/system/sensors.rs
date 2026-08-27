@@ -1,4 +1,4 @@
-use std::fs;
+use std::{fs, path::Path};
 use crate::errors::reader_error::ReaderError;
 
 pub struct Sensor {
@@ -58,6 +58,10 @@ impl Sensor {
         STORAGE_SENSORS
     }
 
+    fn exists(&self) -> bool {
+        Path::new(self.path).exists()
+    }
+
     pub fn read_sensor(&self) -> Result<u64, ReaderError> {
         let raw_content = match fs::read_to_string(self.path) {
             Ok(c) => c,
@@ -73,7 +77,7 @@ impl Sensor {
     pub fn find_sensor<'a>(sensors: &'a [Sensor], name: &str) -> Result<&'a Sensor, ReaderError> {
         sensors
             .iter()
-            .find(|v| v.name == name)
+            .find(|v| v.name == name && v.exists())
             .ok_or_else(|| ReaderError::SensorNotFound(format!("{name} sensor not found")))
     }
 }
