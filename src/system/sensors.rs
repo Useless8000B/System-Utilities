@@ -70,7 +70,7 @@ impl Sensor {
 
         match raw_content.trim().parse::<u64>() {
             Ok(c) => Ok(c),
-            Err(e) => Err(ReaderError::ParseError(format!("Coudln't parse: {raw_content}: {e}"))),
+            Err(e) => Err(ReaderError::ParseError(format!("Couldn't parse: {raw_content}: {e}"))),
         }
     }
 
