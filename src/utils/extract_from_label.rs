@@ -4,7 +4,7 @@ use crate::errors::reader_error::ReaderError;
 pub fn extract_from_label(path: &str, label: &str) -> Result<u64, ReaderError> {
     let content =
         fs::read_to_string(path)
-            .map_err(|e| ReaderError::ReadingError(format!("Error reading {label} at path {path}: {e}")))?;
+            .map_err(|e| ReaderError::ReadingError(format!("{label} at {path}: {e}")))?;
 
     let label_value = content
         .lines()
@@ -17,7 +17,7 @@ pub fn extract_from_label(path: &str, label: &str) -> Result<u64, ReaderError> {
                 None
             }
         })
-        .ok_or_else(|| ReaderError::ReadingError(format!("Error reading {label}")))?;
+        .ok_or_else(|| ReaderError::ReadingError(format!("{label}")))?;
 
     Ok(label_value)
 }
